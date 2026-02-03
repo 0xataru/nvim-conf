@@ -75,7 +75,7 @@
 
 ```bash
 # Clone into your config path (replace URL and path with your repo and target)
-git clone <your-repo-url> ~/.config/ataru/nvim-conf
+git clone git@github.com:0xataru/nvim-conf.git ~/.config/ataru/nvim-conf
 ```
 
 ```bash
