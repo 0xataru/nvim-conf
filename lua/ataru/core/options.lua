@@ -18,6 +18,7 @@ opt.ignorecase = true
 opt.smartcase = true
 
 opt.cursorline = true
+-- CursorLine and ColorColumn colors are set in colorscheme.lua (after theme loads)
 
 opt.termguicolors = true
 opt.background = "dark"

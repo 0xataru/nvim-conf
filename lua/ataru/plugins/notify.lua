@@ -7,7 +7,7 @@ return {
             position = "top_right",
             stages = "fade_in_slide_out",
             timeout = 3000,
-            background_colour = "Normal",
+            background_colour = "#000000",
             max_width = 80,  -- wider so long paths/messages wrap instead of truncating
             max_height = 20, -- more lines for wrapped content
             level = vim.log.levels.INFO,
