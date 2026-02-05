@@ -51,6 +51,11 @@
 - [Git](https://git-scm.com/)
 - [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads) (or any Nerd Font for icons)
 
+## Treesitter
+
+- [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter) — for installing/compiling nvim-treesitter grammars
+  (e.g. `npm install -g tree-sitter-cli`)
+
 ## Telescope (find files, grep)
 
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
@@ -73,13 +78,15 @@
 
 ## Installation
 
+### Clone into your config path (replace URL and path with your repo and target)
+
 ```bash
-# Clone into your config path (replace URL and path with your repo and target)
 git clone git@github.com:0xataru/nvim-conf.git ~/.config/ataru/nvim-conf
 ```
 
+### Optional: remove .git if this is a private copy
+
 ```bash
-# Optional: remove .git if this is a private copy
 rm -rf ~/.config/ataru/nvim-conf/.git
 ```
 
