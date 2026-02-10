@@ -39,6 +39,6 @@ return {
         })
 
         -- Exit terminal mode with jk (same as insert mode); then press q to close the agent window
-        vim.keymap.set("t", "jk", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+        vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
     end,
 }

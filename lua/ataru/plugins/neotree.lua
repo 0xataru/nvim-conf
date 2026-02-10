@@ -37,14 +37,7 @@ return {
                 enable = true,
                 use_winbar = false,
             },
-            event_handlers = {
-                {
-                    event = "file_opened",
-                    handler = function()
-                        require("neo-tree.command").execute({ action = "close" })
-                    end,
-                },
-            },
+            event_handlers = {},
             open_files_do_not_replace_types = { "terminal", "trouble", "qf", "help" },
             default_component_configs = {
                 indent = {
@@ -58,7 +51,21 @@ return {
 
         local keymap = vim.keymap
 
-        keymap.set("n", "<leader>e", "<cmd>Neotree float toggle<CR>", { desc = "Toggle floating file explorer" })
-        keymap.set("n", "<leader>E", "<cmd>Neotree left <CR>", { desc = "Toggle left side file explorer" })
+        keymap.set("n", "<leader>e", function()
+            require("neo-tree.command").execute({
+                toggle = true,
+                position = "float",
+                source = "filesystem",
+                reveal = true,
+            })
+        end, { desc = "Toggle floating file explorer (reveal current file)" })
+        keymap.set("n", "<leader>E", function()
+            require("neo-tree.command").execute({
+                toggle = true,
+                position = "left",
+                source = "filesystem",
+                reveal = true,
+            })
+        end, { desc = "Toggle left side file explorer (reveal current file)" })
     end,
 }
