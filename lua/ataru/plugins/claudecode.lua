@@ -21,5 +21,9 @@ return {
         },
         { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<CR>", desc = "Claude Code: Accept diff" },
         { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<CR>", desc = "Claude Code: Deny diff" },
+        { "<leader>a[", "<cmd>vertical resize -5<CR>", desc = "Claude Code: Decrease width" },
+        { "<leader>a]", "<cmd>vertical resize +5<CR>", desc = "Claude Code: Increase width" },
+        { "<leader>a{", "<cmd>resize -5<CR>", desc = "Claude Code: Decrease height" },
+        { "<leader>a}", "<cmd>resize +5<CR>", desc = "Claude Code: Increase height" },
     },
 }
