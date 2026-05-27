@@ -7,5 +7,18 @@ return {
             mode = "buffers",
             separator_style = "slant",
         },
+        highlights = {
+            buffer_selected = {
+                fg = "#FF8C00",
+                bold = true,
+                italic = false,
+            },
+            indicator_selected = {
+                fg = "#FF8C00",
+            },
+            separator_selected = {
+                fg = "#FF8C00",
+            },
+        },
     },
 }

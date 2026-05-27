@@ -16,8 +16,12 @@ return {
             view = "notify",
             opts = {},
         },
-        -- Route all echo-area messages (including "Written", errors, LSP, etc.) to nvim-notify popups
+        -- Route echo-area messages to nvim-notify, but skip search count on n/N
         routes = {
+            {
+                filter = { event = "msg_show", kind = "search_count" },
+                opts = { skip = true },
+            },
             { filter = { event = "msg_show" }, view = "notify" },
         },
         views = {
