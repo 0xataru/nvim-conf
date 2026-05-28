@@ -421,6 +421,16 @@ local function setup_rust_dap()
     })
 end
 
+local function resize_dapui_sidebar(delta)
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].filetype:match("^dap") then
+            vim.api.nvim_win_set_width(win, vim.api.nvim_win_get_width(win) + delta)
+            return
+        end
+    end
+end
+
 local function setup_dap_keymaps()
     local dap = require("dap")
     local dapui = require("dapui")
@@ -466,6 +476,9 @@ local function setup_dap_keymaps()
         end
         dap.continue({ new = true })
     end, { desc = "Debug: Pick config and run" })
+
+    keymap.set("n", "<leader>d[", function() resize_dapui_sidebar(-5) end, { desc = "Debug: Decrease sidebar width" })
+    keymap.set("n", "<leader>d]", function() resize_dapui_sidebar(5) end, { desc = "Debug: Increase sidebar width" })
 
     keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Continue" })
     keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step over" })
