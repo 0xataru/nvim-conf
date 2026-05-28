@@ -94,45 +94,110 @@
 
 -- WARN: GitHub Dark theme for Neovim
 --
+-- return {
+--     {
+--         "projekt0n/github-nvim-theme",
+--         lazy = false,
+--         priority = 1000,
+--         config = function()
+--             vim.cmd.colorscheme("github_dark_tritanopia")
+--
+--             -- Cursor line and 140-column ruler (same color, applied after theme)
+--             local line_highlight = "#4a4a4a"
+--             vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
+--             vim.api.nvim_set_hl(0, "ColorColumn", { bg = line_highlight })
+--
+--             -- Transparent background
+--             vim.cmd([[
+--               highlight Normal guibg=NONE ctermbg=NONE
+--               highlight NonText guibg=NONE ctermbg=NONE
+--
+--               highlight NeoTreeNormal guibg=NONE ctermbg=NONE
+--               highlight NeoTreeFloatNormal guibg=NONE ctermbg=NONE
+--               highlight NeoTreeEndOfBuffer guibg=NONE ctermbg=NONE
+--               highlight NeoTreeCursorLine guibg=NONE ctermbg=NONE
+--
+--               highlight VertSplit guibg=NONE ctermbg=NONE
+--               highlight SignColumn guibg=NONE ctermbg=NONE
+--               highlight EndOfBuffer guibg=NONE ctermbg=NONE
+--               highlight LineNr guibg=NONE ctermbg=NONE
+--               highlight CursorLineNr guibg=NONE ctermbg=NONE
+--               highlight Pmenu guibg=NONE ctermbg=NONE
+--               highlight PmenuSel guibg=NONE ctermbg=NONE
+--               highlight FloatBorder guibg=NONE ctermbg=NONE
+--               highlight NormalFloat guibg=NONE ctermbg=NONE
+--               highlight StatusLine guibg=NONE ctermbg=NONE
+--               highlight StatusLineNC guibg=NONE ctermbg=NONE
+--               highlight TabLine guibg=NONE ctermbg=NONE
+--               highlight TabLineFill guibg=NONE ctermbg=NONE
+--               highlight TabLineSel guibg=NONE ctermbg=NONE
+--               highlight WinSeparator guibg=NONE ctermbg=NONE
+--             ]])
+--         end,
+--     },
+-- }
+
+-- WARN: Oxocarbon theme for Neovim\
+--
+-- return {
+--     {
+--         "nyoom-engineering/oxocarbon.nvim",
+--         lazy = false,
+--         priority = 1000,
+--         config = function()
+--             vim.opt.background = "dark"
+--             vim.cmd.colorscheme("oxocarbon")
+--
+--             -- Cursor line and 140-column ruler (same color, applied after theme)
+--             local line_highlight = "#4a4a4a"
+--             vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
+--             vim.api.nvim_set_hl(0, "ColorColumn", { bg = line_highlight })
+--
+--             -- Transparent background
+--             -- vim.cmd([[
+--             --   highlight Normal guibg=NONE ctermbg=NONE
+--             --   highlight NonText guibg=NONE ctermbg=NONE
+--             --
+--             --   highlight NeoTreeNormal guibg=NONE ctermbg=NONE
+--             --   highlight NeoTreeFloatNormal guibg=NONE ctermbg=NONE
+--             --   highlight NeoTreeEndOfBuffer guibg=NONE ctermbg=NONE
+--             --   highlight NeoTreeCursorLine guibg=NONE ctermbg=NONE
+--             --
+--             --   highlight VertSplit guibg=NONE ctermbg=NONE
+--             --   highlight SignColumn guibg=NONE ctermbg=NONE
+--             --   highlight EndOfBuffer guibg=NONE ctermbg=NONE
+--             --   highlight LineNr guibg=NONE ctermbg=NONE
+--             --   highlight CursorLineNr guibg=NONE ctermbg=NONE
+--             --   highlight Pmenu guibg=NONE ctermbg=NONE
+--             --   highlight PmenuSel guibg=NONE ctermbg=NONE
+--             --   highlight FloatBorder guibg=NONE ctermbg=NONE
+--             --   highlight NormalFloat guibg=NONE ctermbg=NONE
+--             --   highlight StatusLine guibg=NONE ctermbg=NONE
+--             --   highlight StatusLineNC guibg=NONE ctermbg=NONE
+--             --   highlight TabLine guibg=NONE ctermbg=NONE
+--             --   highlight TabLineFill guibg=NONE ctermbg=NONE
+--             --   highlight TabLineSel guibg=NONE ctermbg=NONE
+--             --   highlight WinSeparator guibg=NONE ctermbg=NONE
+--             -- ]])
+--         end,
+--     },
+-- }
+
+-- WARN: Sonokai theme for Neovim
+--
 return {
-    {
-        "projekt0n/github-nvim-theme",
-        lazy = false,
-        priority = 1000,
-        config = function()
-            vim.cmd.colorscheme("github_dark_tritanopia")
+    "sainnhe/sonokai",
+    lazy = false,
+    priority = 1000,
+    config = function()
+        -- Optionally configure and load the colorscheme
+        -- directly inside the plugin declaration.
+        vim.g.sonokai_enable_italic = true
+        vim.cmd.colorscheme("sonokai")
 
-            -- Cursor line and 140-column ruler (same color, applied after theme)
-            local line_highlight = "#4a4a4a"
-            vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
-            vim.api.nvim_set_hl(0, "ColorColumn", { bg = line_highlight })
-
-            -- Transparent background
-            vim.cmd([[
-              highlight Normal guibg=NONE ctermbg=NONE
-              highlight NonText guibg=NONE ctermbg=NONE
-
-              highlight NeoTreeNormal guibg=NONE ctermbg=NONE
-              highlight NeoTreeFloatNormal guibg=NONE ctermbg=NONE
-              highlight NeoTreeEndOfBuffer guibg=NONE ctermbg=NONE
-              highlight NeoTreeCursorLine guibg=NONE ctermbg=NONE
-
-              highlight VertSplit guibg=NONE ctermbg=NONE
-              highlight SignColumn guibg=NONE ctermbg=NONE
-              highlight EndOfBuffer guibg=NONE ctermbg=NONE
-              highlight LineNr guibg=NONE ctermbg=NONE
-              highlight CursorLineNr guibg=NONE ctermbg=NONE
-              highlight Pmenu guibg=NONE ctermbg=NONE
-              highlight PmenuSel guibg=NONE ctermbg=NONE
-              highlight FloatBorder guibg=NONE ctermbg=NONE
-              highlight NormalFloat guibg=NONE ctermbg=NONE
-              highlight StatusLine guibg=NONE ctermbg=NONE
-              highlight StatusLineNC guibg=NONE ctermbg=NONE
-              highlight TabLine guibg=NONE ctermbg=NONE
-              highlight TabLineFill guibg=NONE ctermbg=NONE
-              highlight TabLineSel guibg=NONE ctermbg=NONE
-              highlight WinSeparator guibg=NONE ctermbg=NONE
-            ]])
-        end,
-    },
+        -- Cursor line and 140-column ruler (same color, applied after theme)
+        local line_highlight = "#4a4a4a"
+        vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
+        vim.api.nvim_set_hl(0, "ColorColumn", { bg = line_highlight })
+    end,
 }
