@@ -13,8 +13,9 @@ return {
 
         require("lualine").setup({
             options = {
-                theme = "vscode",
-                -- theme = "onedark",
+                -- theme = "vscode",
+                -- theme = "midnight",
+                theme = "github_dark_tritanopia",
                 icons_enabled = true,
                 component_separators = "|",
                 section_separators = "",
