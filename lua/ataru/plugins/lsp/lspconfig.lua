@@ -20,19 +20,34 @@ return {
 
                 -- set keybinds
                 opts.desc = "Show LSP references"
-                keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+                keymap.set("n", "gR", "<cmd>Trouble lsp_references toggle<CR>", opts) -- show references in Trouble (close with q)
 
                 opts.desc = "Go to declaration"
-                keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+                keymap.set("n", "gD", function()
+                    -- Many servers don't implement textDocument/declaration; fall back to definition.
+                    local clients = vim.lsp.get_clients({ bufnr = ev.buf })
+                    local supports_declaration = false
+                    for _, client in ipairs(clients) do
+                        if client.supports_method("textDocument/declaration") then
+                            supports_declaration = true
+                            break
+                        end
+                    end
+                    if supports_declaration then
+                        vim.lsp.buf.declaration()
+                    else
+                        vim.lsp.buf.definition()
+                    end
+                end, opts) -- go to declaration (falls back to definition)
 
                 opts.desc = "Show LSP definition"
                 keymap.set("n", "gd", vim.lsp.buf.definition, opts) -- show lsp definition
 
                 opts.desc = "Show LSP implementations"
-                keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+                keymap.set("n", "gi", "<cmd>Trouble lsp_implementations toggle<CR>", opts) -- show implementations in Trouble (close with q)
 
                 opts.desc = "Show LSP type definitions"
-                keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+                keymap.set("n", "gt", "<cmd>Trouble lsp_type_definitions toggle<CR>", opts) -- show type definitions in Trouble (close with q)
 
                 opts.desc = "See available code actions"
                 keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, 
@@ -42,7 +57,7 @@ return {
                 keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
 
                 opts.desc = "Show buffer diagnostics"
-                keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+                keymap.set("n", "<leader>D", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", opts) -- buffer diagnostics in Trouble (close with q)
 
                 opts.desc = "Show line diagnostics"
                 keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
