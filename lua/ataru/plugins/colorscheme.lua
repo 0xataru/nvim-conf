@@ -116,6 +116,11 @@ return {
         vim.api.nvim_set_hl(0, "SignColumn", { bg = kitty_bg })
         vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = kitty_bg })
 
+        -- Neo-tree uses its own highlight groups
+        vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = kitty_bg })
+        vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = kitty_bg })
+        vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { bg = kitty_bg })
+
         -- Cursor line and 140-column ruler (same color, applied after theme)
         local line_highlight = "#4a4a4a"
         vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
