@@ -13,11 +13,7 @@ return {
 
         require("lualine").setup({
             options = {
-                -- theme = "vscode",
-                -- theme = "midnight",
-                -- theme = "github_dark_tritanopia",
-                -- theme = "oxocarbon",
-                theme = "sonokai",
+                theme = "auto",
                 icons_enabled = true,
                 component_separators = "|",
                 section_separators = "",
