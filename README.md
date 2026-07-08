@@ -47,19 +47,26 @@
 
 ## Runtime & tools
 
-- [Neovim](https://neovim.io/) (≥ 0.9.5)
-- [Git](https://git-scm.com/)
-- [Fira Code Nerd Font](https://www.nerdfonts.com/font-downloads) (or any Nerd Font for icons)
+- [Neovim](https://neovim.io/) (≥ 0.10)
+- [Git](https://git-scm.com/) — plugin management (lazy.nvim), gitsigns, diffview and `fff.nvim` frecency
+- [RobotoMono Nerd Font](https://www.nerdfonts.com/font-downloads) — the terminal font used by the config (see `example-kitty.conf`); any Nerd Font works for the icons
+- [kitty](https://sw.kovidgoyal.net/kitty/) (optional) — a sample terminal config is provided in `example-kitty.conf`
 
 ## Treesitter
 
 - [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter) — for installing/compiling nvim-treesitter grammars
   (e.g. `npm install -g tree-sitter-cli`)
+- A C compiler (clang/gcc) — grammars are compiled locally
 
-## Telescope (find files, grep)
+## File finding & search (fff.nvim)
 
-- [ripgrep](https://github.com/BurntSushi/ripgrep)
-- [fd](https://github.com/sharkdp/fd)
+The old Telescope setup has been replaced by [fff.nvim](https://github.com/dmtrKovalenko/fff.nvim),
+which uses a native Rust backend for fuzzy file finding and live grep (`<leader>ff`, `<leader>fr`,
+`<leader>fs`, `<leader>fc`, `<leader>fz`).
+
+- [Rust](https://www.rust-lang.org/) toolchain (`cargo`) — needed to build the `fff` binary from source
+  if a prebuilt binary cannot be downloaded automatically
+- [ripgrep](https://github.com/BurntSushi/ripgrep) — for live grep
 
 ## LazyGit
 
@@ -72,9 +79,20 @@
 - [Go](https://go.dev/) — for gopls, golangci-lint, gofmt
 - [Rust](https://www.rust-lang.org/) (rustup) — for rust_analyzer, cargo, rustfmt
 
-## Telescope fzf native (optional)
+## Debugging (nvim-dap, optional)
 
-- C compiler and [make](https://www.gnu.org/software/make/) — for building `telescope-fzf-native.nvim`
+Adapters (`delve`, `codelldb`, `js-debug-adapter`) are installed via Mason. To actually debug you also need
+the matching toolchains:
+
+- [Go](https://go.dev/) — for Delve (`dlv`) debugging
+- [Rust](https://www.rust-lang.org/) (`cargo`) — Rust launch builds the crate before debugging with codelldb
+- [Node.js](https://nodejs.org/) — for the JS/TS debug adapter
+
+## AI assistants (optional)
+
+- [Claude Code](https://www.anthropic.com/claude-code) CLI (`claude`) — for `claudecode.nvim`
+- [cursor-agent](https://cursor.com/) CLI (`cursor-agent`) — for `cursor-agent.nvim`
+- [GitHub Copilot](https://github.com/features/copilot) subscription — for `copilot.lua` inline suggestions
 
 ## Installation
 
