@@ -85,6 +85,17 @@ return {
         -- Apply capabilities to all LSP servers (Neovim 0.11+ / mason-lspconfig uses vim.lsp.config, no setup_handlers)
         vim.lsp.config("*", { capabilities = capabilities })
 
+        -- Use the rustup-provided rust-analyzer (the ~/.cargo/bin proxy respects the
+        -- project's active toolchain, incl. rust-toolchain.toml) instead of Mason's
+        -- standalone binary. Mason's build lags the compiler, and a version-skewed
+        -- rust-analyzer fails to expand macros -> bogus "unresolved macro" /
+        -- "expected !, found ()" errors on code that builds fine. mason.nvim also
+        -- prepends its bin/ to PATH, so we pin an explicit path here to avoid shadowing.
+        local rustup_ra = vim.fn.expand("$HOME/.cargo/bin/rust-analyzer")
+        if vim.fn.executable(rustup_ra) == 1 then
+            vim.lsp.config("rust_analyzer", { cmd = { rustup_ra } })
+        end
+
         local severity = vim.diagnostic.severity
 
         vim.diagnostic.config({

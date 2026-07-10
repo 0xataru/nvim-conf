@@ -9,15 +9,15 @@ return {
         },
         highlights = {
             buffer_selected = {
-                fg = "#FF8C00",
+                fg = "#008C00",
                 bold = true,
                 italic = false,
             },
             indicator_selected = {
-                fg = "#FF8C00",
+                fg = "#008C00",
             },
             separator_selected = {
-                fg = "#FF8C00",
+                fg = "#008C00",
             },
         },
     },

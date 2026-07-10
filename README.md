@@ -49,8 +49,10 @@
 
 - [Neovim](https://neovim.io/) (≥ 0.10)
 - [Git](https://git-scm.com/) — plugin management (lazy.nvim), gitsigns, diffview and `fff.nvim` frecency
-- [RobotoMono Nerd Font](https://www.nerdfonts.com/font-downloads) — the terminal font used by the config (see `example-kitty.conf`); any Nerd Font works for the icons
-- [kitty](https://sw.kovidgoyal.net/kitty/) (optional) — a sample terminal config is provided in `example-kitty.conf`
+- [RobotoMono Nerd Font](https://www.nerdfonts.com/font-downloads) — the terminal font used by the config (see the sample terminal configs); any Nerd Font works for the icons
+- A terminal emulator (optional — pick either one, sample configs are provided):
+  - [kitty](https://sw.kovidgoyal.net/kitty/) — see `example-kitty.conf`
+  - [Ghostty](https://ghostty.org/) — see `example-ghostty.conf`
 
 ## Treesitter
 

@@ -16,7 +16,8 @@ return {
                 "pyright",
                 "eslint",
                 "gopls",         -- Go LSP (golangcilint is a linter, use in nvim-lint)
-                "rust_analyzer", -- Rust LSP (cargo is build tool / nvim-lint linter)
+                -- rust-analyzer: use the rustup toolchain binary instead (see lspconfig.lua).
+                -- Mason's standalone build lags the compiler and breaks macro expansion.
             },
         },
         dependencies = {
