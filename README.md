@@ -47,7 +47,9 @@
 
 ## Runtime & tools
 
-- [Neovim](https://neovim.io/) (≥ 0.10)
+- [Neovim](https://neovim.io/) (**≥ 0.12**) — required because nvim-treesitter is pinned to its `main` branch,
+  which uses APIs (e.g. `vim.list`) that only exist in 0.12+. On Homebrew, until 0.12 is released as stable,
+  install a dev build with `brew install --HEAD neovim`.
 - [Git](https://git-scm.com/) — plugin management (lazy.nvim), gitsigns, diffview and `fff.nvim` frecency
 - [RobotoMono Nerd Font](https://www.nerdfonts.com/font-downloads) — the terminal font used by the config (see the sample terminal configs); any Nerd Font works for the icons
 - A terminal emulator (optional — pick either one, sample configs are provided):
@@ -56,9 +58,14 @@
 
 ## Treesitter
 
-- [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter) — for installing/compiling nvim-treesitter grammars
-  (e.g. `npm install -g tree-sitter-cli`)
-- A C compiler (clang/gcc) — grammars are compiled locally
+nvim-treesitter is pinned to the `main` branch (see requirement above), which compiles grammars with the
+`tree-sitter` CLI rather than a bundled compiler.
+
+- [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter) (**≥ 0.26.1**) — for installing/compiling
+  nvim-treesitter grammars. Install with `cargo install tree-sitter-cli` (goes to `~/.cargo/bin`, no sudo)
+  or `npm install -g tree-sitter-cli`. Note: the Homebrew `tree-sitter` formula currently ships the library
+  without a new-enough CLI, so use cargo/npm.
+- A C compiler (clang/gcc) — the CLI compiles the generated parser source locally
 
 ## File finding & search (fff.nvim)
 
@@ -98,18 +105,46 @@ the matching toolchains:
 
 ## Installation
 
-### Clone into your config path (replace URL and path with your repo and target)
+### 1. Prerequisites (macOS / Homebrew example)
+
+```bash
+# Neovim 0.12+ (dev build until 0.12 is stable) — required by nvim-treesitter main branch
+brew unlink neovim 2>/dev/null; brew install --HEAD neovim
+nvim --version            # expect v0.12.x / v0.13.x-dev
+
+# tree-sitter CLI >= 0.26.1 (compiles treesitter grammars). Homebrew's formula is too old, use cargo/npm:
+cargo install tree-sitter-cli      # installs to ~/.cargo/bin (make sure it's on PATH)
+tree-sitter --version              # expect >= 0.26.1
+
+# ripgrep for live grep (fff.nvim), plus a C compiler (Xcode CLT provides clang)
+brew install ripgrep
+```
+
+On Linux use your package manager for ripgrep and a C compiler; get a Neovim 0.12+ build from
+[the nightly/release page](https://github.com/neovim/neovim/releases) or your distro's nightly channel.
+Optional toolchains (Node.js, Python, Go, Rust/rustup) are only needed for the matching LSPs/debuggers.
+
+### 2. Clone the config into your config path
 
 ```bash
 git clone git@github.com:0xataru/nvim-conf.git ~/.config/ataru/nvim-conf
 ```
 
-### Optional: remove .git if this is a private copy
+### 3. Add the launch alias (matches this repo's `NVIM_APPNAME`)
 
 ```bash
-rm -rf ~/.config/ataru/nvim-conf/.git
+echo "alias v='NVIM_APPNAME=ataru/nvim-conf nvim'" >> ~/.zshrc && source ~/.zshrc
 ```
 
-Run Neovim using this config (e.g.`NVIM_APPNAME=ataru/nvim-conf nvim`)
+`NVIM_APPNAME=ataru/nvim-conf` keeps this config isolated: its data/plugins live in
+`~/.local/share/ataru/nvim-conf/`, separate from any default `~/.config/nvim`.
 
-Start Neovim and run `:Lazy` to install plugins. LSP servers and tools (prettier, stylua, pylint, golangci-lint, etc.) are installed via Mason on first use or via `:Mason`.
+### 4. First run
+
+Launch with `v` (or `NVIM_APPNAME=ataru/nvim-conf nvim`). On first start:
+
+- lazy.nvim bootstraps and installs all plugins (`:Lazy` to inspect/sync).
+- nvim-treesitter installs the grammars from `ensure_installed` (needs the `tree-sitter` CLI from step 1).
+- LSP servers and tools (prettier, stylua, pylint, golangci-lint, …) install via Mason on first use or `:Mason`.
+
+Verify everything with `:checkhealth` (in particular `:checkhealth nvim-treesitter`).

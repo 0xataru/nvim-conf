@@ -32,3 +32,7 @@ opt.clipboard:append("unnamedplus")
 
 opt.splitright = true
 opt.splitbelow = true
+
+-- Folding: treesitter-based foldexpr is set per-buffer in plugins/treesitter.lua.
+-- Open every file fully unfolded; fold manually with za / zc (zR unfold all, zM fold all).
+opt.foldlevelstart = 99
