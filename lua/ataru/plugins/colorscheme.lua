@@ -1,3 +1,15 @@
+-- Copilot ghost text renders on the cursor line, and line_highlight (#4a4a4a)
+-- washes out most themes' defaults for it -- tokyonight's #444a73 sits at a
+-- 1.1:1 contrast ratio against it. Re-applied on every colorscheme so the
+-- themes below stay usable when swapped in.
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = vim.api.nvim_create_augroup("ataru_copilot_hl", { clear = true }),
+    callback = function()
+        vim.api.nvim_set_hl(0, "CopilotSuggestion", { fg = "#9aa5cc", italic = true })
+        vim.api.nvim_set_hl(0, "CopilotAnnotation", { fg = "#9aa5cc", italic = true })
+    end,
+})
+
 -- WARN: VSCode Dark+ theme for Neovim
 --
 -- return {
