@@ -18,7 +18,7 @@ keymap.set("v", "<D-s>", "<ESC>:w<CR>", { silent = true, desc = "Save file in vi
 keymap.set("n", "<D-s>", ":w<CR>", { silent = true, desc = "Save file in normal mode" })
 
 -- clear search highlights
-keymap.set("n", "<leader>h", ":nohl<CR>", { silent = true, desc = "Clear search highlights" })
+keymap.set("n", "<leader>hh", ":nohl<CR>", { silent = true, desc = "Clear search highlights" })
 
 -- delete single character without copying into register
 keymap.set("n", "x", '"_x')
