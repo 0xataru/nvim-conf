@@ -20,8 +20,20 @@ return {
                 liquid = { "prettier" },
                 lua = { "stylua" },
                 python = { "isort", "black" },
-                go = { "gofmt" },
+                -- golines wraps long lines and runs gofmt itself, so gofmt is not needed here.
+                go = { "golines" },
                 rust = { "rustfmt" },
+            },
+            formatters = {
+                golines = {
+                    prepend_args = {
+                        -- Keep in sync with opt.colorcolumn in core/options.lua.
+                        "--max-len=120",
+                        "--shorten-comments",
+                        -- Length is counted with tabs expanded to this width (Go indents with tabs).
+                        "--tab-len=4",
+                    },
+                },
             },
             format_on_save = {
                 lsp_fallback = true,

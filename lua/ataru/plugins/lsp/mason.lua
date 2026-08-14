@@ -15,7 +15,7 @@ return {
                 "prismals",
                 "pyright",
                 "eslint",
-                "gopls",         -- Go LSP (golangcilint is a linter, use in nvim-lint)
+                "gopls", -- Go LSP (golangcilint is a linter, use in nvim-lint)
                 -- rust-analyzer: use the rustup toolchain binary instead (see lspconfig.lua).
                 -- Mason's standalone build lags the compiler and breaks macro expansion.
             },
@@ -40,13 +40,14 @@ return {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         opts = {
             ensure_installed = {
-                "prettier",       -- prettier formatter
-                "stylua",         -- lua formatter
-                "isort",          -- python formatter
-                "black",          -- python formatter
+                "prettier", -- prettier formatter
+                "stylua", -- lua formatter
+                "isort", -- python formatter
+                "black", -- python formatter
                 "pylint",
                 "eslint_d",
-                "golangci-lint",  -- Go linter for nvim-lint
+                "golangci-lint", -- Go linter for nvim-lint
+                "golines", -- Go formatter that wraps long lines (gofmt has no line limit)
             },
         },
         dependencies = {
