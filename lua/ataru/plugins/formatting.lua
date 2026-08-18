@@ -32,6 +32,8 @@ return {
                         "--shorten-comments",
                         -- Length is counted with tabs expanded to this width (Go indents with tabs).
                         "--tab-len=4",
+                        -- Don't column-align keys inside struct tags (json/validate/example stay as written).
+                        "--no-reformat-tags",
                     },
                 },
             },
