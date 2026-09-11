@@ -94,6 +94,15 @@ which uses a native Rust backend for fuzzy file finding and live grep (`<leader>
 - [Go](https://go.dev/) — for gopls, golangci-lint, gofmt
 - [Rust](https://www.rust-lang.org/) (rustup) — for rust_analyzer, cargo, rustfmt
 
+## Markdown preview
+
+[markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) renders the current markdown
+buffer in the browser with live sync (`<leader>mv` toggles it in markdown files).
+
+- A web browser — the preview opens at a local URL
+- The build step downloads a prebuilt server binary; if that fails, Node.js + yarn are needed to build
+  `app/` from source
+
 ## Debugging (nvim-dap, optional)
 
 Adapters (`delve`, `codelldb`, `js-debug-adapter`) are installed via Mason. To actually debug you also need
