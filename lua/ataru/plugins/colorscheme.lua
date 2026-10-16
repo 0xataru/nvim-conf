@@ -10,6 +10,14 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     end,
 })
 
+-- Gitsigns inline blame (<leader>hB) in violet, readable on line_highlight.
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = vim.api.nvim_create_augroup("ataru_blame_hl", { clear = true }),
+    callback = function()
+        vim.api.nvim_set_hl(0, "GitSignsCurrentLineBlame", { fg = "#bb9af7", italic = true })
+    end,
+})
+
 -- WARN: VSCode Dark+ theme for Neovim
 --
 -- return {

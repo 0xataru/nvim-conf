@@ -46,6 +46,9 @@ return {
                     last_indent_marker = "└",
                     highlight = "NeoTreeIndentMarker",
                 },
+                symlink_target = {
+                    enabled = true,
+                },
             },
         })
 
