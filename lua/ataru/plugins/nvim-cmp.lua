@@ -1,5 +1,6 @@
 return {
     "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
     dependencies = {
         "hrsh7th/cmp-buffer", -- source for text in buffer
         "hrsh7th/cmp-path", -- source for file system paths
@@ -23,7 +24,7 @@ return {
         require("luasnip.loaders.from_vscode").lazy_load()
 
         cmp.setup({
-            completeon = {
+            completion = {
                 completeopt = "menu,menuone,preview,noselect",
             },
             window = {
@@ -44,6 +45,20 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
                 ["<C-e>"] = cmp.mapping.abort(), -- close completion window
                 ["<CR>"] = cmp.mapping.confirm({ select = false }),
+                ["<C-l>"] = cmp.mapping(function(fallback)
+                    if luasnip.locally_jumpable(1) then
+                        luasnip.jump(1)
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
+                ["<C-h>"] = cmp.mapping(function(fallback)
+                    if luasnip.locally_jumpable(-1) then
+                        luasnip.jump(-1)
+                    else
+                        fallback()
+                    end
+                end, { "i", "s" }),
             }),
             -- sources for autocompletion
             sources = cmp.config.sources({

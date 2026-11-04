@@ -218,10 +218,16 @@ local function read_cargo_toml(path)
 end
 
 local function parse_cargo_toml_field(content, field)
+    local in_package = false
     for line in content:gmatch("[^\r\n]+") do
-        local value = line:match("^" .. field .. "%s*=%s*\"([^\"]+)\"")
-        if value then
-            return value
+        local section = line:match("^%s*%[([^%]]+)%]")
+        if section then
+            in_package = section == "package"
+        elseif in_package then
+            local value = line:match("^%s*" .. field .. "%s*=%s*\"([^\"]+)\"")
+            if value then
+                return value
+            end
         end
     end
     return nil
@@ -336,64 +342,57 @@ local function resolve_rust_debug_target(file_path)
     }, nil
 end
 
-local function build_rust_crate(target)
-    local cmd = { "cargo", "build", "-p", target.package_name, "--message-format=json" }
+local function build_rust_crate(target, on_done)
     local env = vim.fn.environ()
     env.CARGO_TARGET_DIR = target.workspace_root .. "/target"
 
-    local result
-    if vim.system then
-        result = vim.system(cmd, {
-            cwd = target.workspace_root,
-            env = env,
-            stdout = true,
-            stderr = true,
-            text = true,
-        }):wait()
-    else
-        local shell_cmd = string.format(
-            "cd %s && CARGO_TARGET_DIR=%s cargo build -p %s --message-format=json 2>&1",
-            vim.fn.shellescape(target.workspace_root),
-            vim.fn.shellescape(env.CARGO_TARGET_DIR),
-            target.package_name
-        )
-        local out = vim.fn.system(shell_cmd)
-        result = { code = vim.v.shell_error, stdout = out, stderr = "" }
-    end
+    vim.notify("cargo build -p " .. target.package_name, vim.log.levels.INFO, { title = "DAP" })
+    vim.system({ "cargo", "build", "-p", target.package_name, "--message-format=json" }, {
+        cwd = target.workspace_root,
+        env = env,
+        text = true,
+    }, vim.schedule_wrap(function(result)
+        if result.code ~= 0 then
+            on_done(false, "cargo build failed:\n" .. (result.stderr or "") .. (result.stdout or ""))
+            return
+        end
 
-    if result.code ~= 0 then
-        local err = (result.stderr or "") .. (result.stdout or "")
-        return false, "cargo build failed:\n" .. err
-    end
+        local program = parse_cargo_build_output(result.stdout or "", target.bin_name)
+            or find_built_binary(target.workspace_root, target.bin_name, target.package_name)
 
-    local program = parse_cargo_build_output(result.stdout or "", target.bin_name)
-        or find_built_binary(target.workspace_root, target.bin_name, target.package_name)
+        if not program or vim.fn.filereadable(program) ~= 1 then
+            on_done(
+                false,
+                "Binary not found after build (package: "
+                    .. target.package_name
+                    .. ", bin: "
+                    .. target.bin_name
+                    .. ")"
+            )
+            return
+        end
 
-    if not program or vim.fn.filereadable(program) ~= 1 then
-        return false,
-            "Binary not found after build (package: "
-                .. target.package_name
-                .. ", bin: "
-                .. target.bin_name
-                .. ")"
-    end
-
-    target.program = program
-    return true, nil
+        target.program = program
+        on_done(true, nil)
+    end))
 end
 
-local function prepare_rust_launch()
+local function prepare_rust_launch(on_done)
     local target, err = resolve_rust_debug_target(vim.fn.expand("%:p"))
     if not target then
-        return nil, err
+        vim.schedule(function()
+            on_done(nil, err)
+        end)
+        return
     end
 
-    local ok, build_err = build_rust_crate(target)
-    if not ok then
-        return nil, build_err
-    end
-
-    return target, nil
+    build_rust_crate(target, function(ok, build_err)
+        if not ok then
+            on_done(nil, build_err)
+            return
+        end
+        on_done(target, nil)
+    end)
 end
 
 local function setup_rust_dap()
@@ -405,7 +404,11 @@ local function setup_rust_dap()
             request = "launch",
             name = "Rust: debug crate (current file)",
             program = function()
-                local target, err = prepare_rust_launch()
+                local co = coroutine.running()
+                prepare_rust_launch(function(target, err)
+                    coroutine.resume(co, target, err)
+                end)
+                local target, err = coroutine.yield()
                 if not target then
                     vim.notify(err, vim.log.levels.ERROR, { title = "DAP" })
                     return nil
@@ -459,19 +462,20 @@ local function setup_dap_keymaps()
     keymap.set("n", "<leader>dl", dap.run_last, { desc = "Debug: Run last" })
     keymap.set("n", "<leader>dR", function()
         if vim.bo.filetype == "rust" then
-            local target, err = prepare_rust_launch()
-            if not target then
-                vim.notify(err, vim.log.levels.ERROR, { title = "DAP" })
-                return
-            end
-            dap.run({
-                type = "codelldb",
-                request = "launch",
-                name = "Rust: " .. target.package_name,
-                program = target.program,
-                cwd = target.crate_root,
-                stopOnEntry = false,
-            })
+            prepare_rust_launch(function(target, err)
+                if not target then
+                    vim.notify(err, vim.log.levels.ERROR, { title = "DAP" })
+                    return
+                end
+                dap.run({
+                    type = "codelldb",
+                    request = "launch",
+                    name = "Rust: " .. target.package_name,
+                    program = target.program,
+                    cwd = target.crate_root,
+                    stopOnEntry = false,
+                })
+            end)
             return
         end
         dap.continue({ new = true })
@@ -489,7 +493,27 @@ end
 return {
     {
         "mfussenegger/nvim-dap",
-        lazy = false,
+        cmd = { "DapContinue", "DapNew", "DapToggleBreakpoint" },
+        keys = {
+            "<leader>db",
+            "<leader>dB",
+            "<leader>dc",
+            "<leader>di",
+            "<leader>do",
+            "<leader>dO",
+            "<leader>dt",
+            "<leader>du",
+            "<leader>dr",
+            "<leader>dC",
+            "<leader>dl",
+            "<leader>dR",
+            "<leader>d[",
+            "<leader>d]",
+            "<F5>",
+            "<F10>",
+            "<F11>",
+            "<F12>",
+        },
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "theHamsta/nvim-dap-virtual-text",
@@ -554,7 +578,18 @@ return {
 
             require("mason-nvim-dap").setup({
                 ensure_installed = { "delve", "codelldb", "js" },
-                handlers = {},
+                handlers = {
+                    function(config)
+                        require("mason-nvim-dap").default_setup(config)
+                    end,
+                    delve = function() end,
+                    codelldb = function(config)
+                        config.filetypes = vim.tbl_filter(function(ft)
+                            return ft ~= "rust"
+                        end, config.filetypes or {})
+                        require("mason-nvim-dap").default_setup(config)
+                    end,
+                },
             })
 
             local delve_path = mason_pkg_path("delve")

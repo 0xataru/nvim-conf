@@ -16,12 +16,8 @@ return {
             view = "notify",
             opts = {},
         },
-        -- Route echo-area messages to nvim-notify, but skip search count on n/N
+        -- Route echo-area messages (incl. search count on n/N) to nvim-notify
         routes = {
-            {
-                filter = { event = "msg_show", kind = "search_count" },
-                opts = { skip = true },
-            },
             { filter = { event = "msg_show" }, view = "notify" },
         },
         views = {

@@ -3,13 +3,48 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
         "hrsh7th/cmp-nvim-lsp",
-        { "antosha417/nvim-lsp-file-operations", config = true },
-        { "folke/neodev.nvim", opts = {} },
+        {
+            "Crysthamus/nvim-file-operations",
+            config = function()
+                require("nvim-file-operations").setup()
+            end,
+        },
     },
     config = function()
         local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
         local keymap = vim.keymap
+
+        local severity_names = { "Error", "Warn", "Info", "Hint" }
+
+        local function float_severity(bufnr, scope)
+            local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+            local on_line = vim.diagnostic.get(bufnr, { lnum = row - 1 })
+            local shown = vim.tbl_filter(function(d)
+                return scope ~= "cursor" or (d.col <= col and col <= (d.end_col or d.col))
+            end, on_line)
+            if #shown == 0 then
+                shown = on_line
+            end
+            local best = vim.diagnostic.severity.HINT
+            for _, d in ipairs(shown) do
+                best = math.min(best, d.severity)
+            end
+            return best
+        end
+
+        local function open_diagnostic_float(float_opts)
+            float_opts = float_opts or {}
+            local bufnr = float_opts.bufnr or vim.api.nvim_get_current_buf()
+            local name = severity_names[float_severity(bufnr, float_opts.scope)]
+            local _, win = vim.diagnostic.open_float(float_opts)
+            if win then
+                vim.wo[win].winhighlight = ("NormalFloat:DiagnosticFloat%sNormal,FloatBorder:DiagnosticFloat%sBorder"):format(
+                    name,
+                    name
+                )
+            end
+        end
 
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -28,7 +63,7 @@ return {
                     local clients = vim.lsp.get_clients({ bufnr = ev.buf })
                     local supports_declaration = false
                     for _, client in ipairs(clients) do
-                        if client.supports_method("textDocument/declaration") then
+                        if client:supports_method("textDocument/declaration") then
                             supports_declaration = true
                             break
                         end
@@ -56,20 +91,29 @@ return {
                 opts.desc = "Smart rename"
                 keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
 
-                opts.desc = "Show buffer diagnostics"
-                keymap.set("n", "<leader>D", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", opts) -- buffer diagnostics in Trouble (close with q)
-
                 opts.desc = "Show line diagnostics"
-                keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
+                keymap.set("n", "<leader>cd", function()
+                    open_diagnostic_float()
+                end, opts) -- show diagnostics for line
 
                 opts.desc = "Go to previous diagnostic"
                 keymap.set("n", "[d", function()
-                    vim.diagnostic.jump({ count = -1, float = true })
+                    vim.diagnostic.jump({
+                        count = -1,
+                        on_jump = function(_, bufnr)
+                            open_diagnostic_float({ bufnr = bufnr, scope = "cursor", focus = false })
+                        end,
+                    })
                 end, opts) -- jump to previous diagnostic in buffer
 
                 opts.desc = "Go to next diagnostic"
                 keymap.set("n", "]d", function()
-                    vim.diagnostic.jump({ count = 1, float = true })
+                    vim.diagnostic.jump({
+                        count = 1,
+                        on_jump = function(_, bufnr)
+                            open_diagnostic_float({ bufnr = bufnr, scope = "cursor", focus = false })
+                        end,
+                    })
                 end, opts) -- jump to next diagnostic in buffer
 
                 opts.desc = "Show documentation for what is under cursor"
@@ -80,7 +124,11 @@ return {
             end,
         })
 
-        local capabilities = cmp_nvim_lsp.default_capabilities()
+        local capabilities = vim.tbl_deep_extend(
+            "force",
+            cmp_nvim_lsp.default_capabilities(),
+            require("nvim-file-operations.config").default_capabilities()
+        )
 
         -- Apply capabilities to all LSP servers (Neovim 0.11+ / mason-lspconfig uses vim.lsp.config, no setup_handlers)
         vim.lsp.config("*", { capabilities = capabilities })
@@ -99,6 +147,7 @@ return {
         local severity = vim.diagnostic.severity
 
         vim.diagnostic.config({
+            float = { border = "rounded" },
             signs = {
                 text = {
                     [severity.ERROR] = " ",

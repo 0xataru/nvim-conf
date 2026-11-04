@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Setup lazy.nvim
 require("lazy").setup({ { import = "ataru.plugins" }, { import = "ataru.plugins.lsp" } }, {
     rocks = {
-        enables = false,
+        enabled = false,
     },
     checker = {
         enabled = true,

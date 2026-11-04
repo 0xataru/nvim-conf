@@ -4,65 +4,35 @@ return {
     config = function()
         local lint = require("lint")
 
+        local golangcilint = lint.linters.golangcilint
+        if golangcilint.args then
+            golangcilint.args[#golangcilint.args] = function()
+                local file = vim.api.nvim_buf_get_name(0)
+                return vim.fs.root(file, "go.mod") and vim.fs.dirname(file) or file
+            end
+        end
+
+        local function lint_buffer()
+            lint.try_lint(nil, { cwd = vim.bo.filetype == "go" and vim.fs.root(0, "go.mod") or nil })
+        end
+
+        local go_events = { BufReadPost = true, BufWritePost = true }
+
         lint.linters_by_ft = {
             python = { "pylint" },
+            go = { "golangcilint" },
         }
 
-        local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-
-        local function file_in_cwd(file_name)
-            return vim.fs.find(file_name, {
-                upward = true,
-                stop = vim.loop.cwd():match("(.+)/"),
-                path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
-                type = "file",
-            })[1]
-        end
-
-        local function remove_linter(linters, linter_name)
-            for k, v in pairs(linters) do
-                if v == linter_name then
-                    linters[k] = nil
-                    break
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "BufWritePost", "InsertLeave" }, {
+            group = vim.api.nvim_create_augroup("lint", { clear = true }),
+            callback = function(ev)
+                if vim.bo[ev.buf].filetype == "go" and not go_events[ev.event] then
+                    return
                 end
-            end
-        end
-
-        local function linter_in_linters(linters, linter_name)
-            for k, v in pairs(linters) do
-                if v == linter_name then
-                    return true
-                end
-            end
-            return false
-        end
-
-        local function remove_linter_if_missing_config_file(linters, linter_name, config_file_name)
-            if linter_in_linters(linters, linter_name) and not file_in_cwd(config_file_name) then
-                remove_linter(linters, linter_name)
-            end
-        end
-
-        local function try_linting()
-            local linters = lint.linters_by_ft[vim.bo.filetype]
-
-            -- if linters then
-            --   -- remove_linter_if_missing_config_file(linters, "eslint_d", ".eslintrc.cjs")
-            --   remove_linter_if_missing_config_file(linters, "eslint_d", "eslint.config.js")
-            -- end
-
-            lint.try_lint(linters)
-        end
-
-        vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-            group = lint_augroup,
-            callback = function()
-                try_linting()
+                lint_buffer()
             end,
         })
 
-        vim.keymap.set("n", "<leader>l", function()
-            try_linting()
-        end, { desc = "Trigger linting for current file" })
+        vim.keymap.set("n", "<leader>l", lint_buffer, { desc = "Trigger linting for current file" })
     end,
 }

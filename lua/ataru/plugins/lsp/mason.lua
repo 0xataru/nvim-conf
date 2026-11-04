@@ -44,9 +44,6 @@ return {
                 "stylua", -- lua formatter
                 "isort", -- python formatter
                 "black", -- python formatter
-                "pylint",
-                "eslint_d",
-                "golangci-lint", -- Go linter for nvim-lint
                 "golines", -- Go formatter that wraps long lines (gofmt has no line limit)
             },
         },

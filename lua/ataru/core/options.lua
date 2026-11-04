@@ -36,3 +36,13 @@ opt.splitbelow = true
 -- Folding: treesitter-based foldexpr is set per-buffer in plugins/treesitter.lua.
 -- Open every file fully unfolded; fold manually with za / zc (zR unfold all, zM fold all).
 opt.foldlevelstart = 99
+
+opt.list = true
+opt.listchars = { space = "·", tab = "··", trail = "·", nbsp = "␣" }
+
+opt.sessionoptions ="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0

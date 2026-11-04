@@ -1,6 +1,6 @@
 return {
     "rcarriga/nvim-notify",
-    priority = -100, -- load early so vim.notify override is active for all plugins
+    priority = 1000,
     config = function()
         local notify = require("notify")
         notify.setup({
