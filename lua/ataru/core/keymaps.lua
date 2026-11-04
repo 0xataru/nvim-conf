@@ -37,6 +37,10 @@ keymap.set("n", "<leader>wh", "<C-w>h", { desc = "Go to left window" })
 keymap.set("n", "<leader>wl", "<C-w>l", { desc = "Go to right window" })
 keymap.set("n", "<leader>wj", "<C-w>j", { desc = "Go to lower window" })
 keymap.set("n", "<leader>wk", "<C-w>k", { desc = "Go to upper window" })
+keymap.set("n", "<", "<cmd>vertical resize -5<CR>", { desc = "Decrease window width" })
+keymap.set("n", ">", "<cmd>vertical resize +5<CR>", { desc = "Increase window width" })
+keymap.set("n", "<leader>w{", "<cmd>resize -5<CR>", { desc = "Decrease window height" })
+keymap.set("n", "<leader>w}", "<cmd>resize +5<CR>", { desc = "Increase window height" })
 
 keymap.set("n", "<leader>bd", ":bdelete<CR>", { silent = true, desc = "Close current tab" }) -- close current tab
 keymap.set("n", "<S-l>", ":BufferLineCycleNext<CR>", { silent = true, desc = "Go to next tab" }) --  go to next tab
