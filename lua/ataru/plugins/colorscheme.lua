@@ -40,6 +40,7 @@ return {
             local line_highlight = "#4a4a4a"
             vim.api.nvim_set_hl(0, "CursorLine", { bg = line_highlight })
             vim.api.nvim_set_hl(0, "ColorColumn", { bg = line_highlight })
+            vim.api.nvim_set_hl(0, "Comment", { fg = "#a0a8b8", italic = true })
 
             local diagnostic_float_colors = {
                 Error = { bg = "#4a2c3b", border = "#f2a7c3" },
